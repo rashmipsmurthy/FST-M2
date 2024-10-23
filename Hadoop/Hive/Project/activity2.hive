@@ -1,0 +1,18 @@
+--Drop the tables
+DROP TABLE episodeIV_dialogues;
+
+CREATE TABLE episodeIV_dialogues (name STRING, line STRING)
+ROW FORMAT DELIMITED
+FIELDS TERMINATED BY '\t';
+
+-- Load data into tables
+LOAD DATA LOCAL INPATH '/root/Inputs/episodeIV_dialogues.txt' INTO TABLE episodeIV_dialogues;
+
+CREATE TABLE luke_line_count AS
+SELECT COUNT(*) AS luke_lines
+FROM episodeIV_dialogues
+WHERE line LIKE '%Luke%';
+
+-- Save the Result in HDFS path
+INSERT OVERWRITE DIRECTORY 'hdfs:///user/rashmi/HiveLukeCountOutput' ROW FORMAT DELIMITED FIELDS TERMINATED BY '\t' SELECT * FROM luke_line_count;
+~                                                                                                                                                           ~                                    
